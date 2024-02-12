@@ -1,4 +1,4 @@
-package vip.sheeptech.pdftool;
+package vip.sheeptech.officetool.server;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.rendering.PDFRenderer;
@@ -10,11 +10,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author yanghao
+ * @description PDF转换类
+ */
 public class Pdf2Images {
     /**
      * 经过测试,dpi为96,100,105,120,150,200中,105显示效果较为清晰,体积稳定,dpi越高图片体积越大,一般电脑显示分辨率为96
      */
-    public static final float DEFAULT_DPI = 105;
+    public static final float DEFAULT_DPI = 200;
 
     /**
      * 默认转换的图片格式为jpg
@@ -34,21 +38,21 @@ public class Pdf2Images {
             return null;
         }
         try {
-            //加载pdf文件
+            // 加载pdf文件
             PDDocument doc = PDDocument.load(file);
-            //读取pdf文件
+            // 读取pdf文件
             PDFRenderer renderer = new PDFRenderer(doc);
             int pageCount = doc.getNumberOfPages();
             List<String> stringList = new ArrayList<>(pageCount);
-            String filePath = null;
+            String filePath;
             BufferedImage image;
             for (int i = 0; i < pageCount; i++) {
-                //96/144/198
+                // 96/144/198
                 // Windows native DPI
                 image = renderer.renderImageWithDPI(i, DEFAULT_DPI);
                 // BufferedImage srcImage = resize(image, 240, 240);//产生缩略图
                 filePath = targetPath + (i + 1) + "." + DEFAULT_FORMAT;
-                //保存图片
+                // 保存图片
                 ImageIO.write(image, DEFAULT_FORMAT, new File(filePath));
                 stringList.add(filePath);
             }
@@ -57,12 +61,6 @@ public class Pdf2Images {
             e.printStackTrace();
             return null;
         }
-    }
-
-    public static void main(String[] args) {
-        String pdfPath = "E:/test/杨浩Java简历.pdf";
-        String targetPath = "E:/test/";
-        Pdf2Images.pdfToManyImage(pdfPath, targetPath);
     }
 }
 

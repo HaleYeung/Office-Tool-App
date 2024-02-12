@@ -1,4 +1,4 @@
-package vip.sheeptech.pdftool;
+package vip.sheeptech.officetool;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -7,12 +7,15 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class HelloApplication extends Application {
+/**
+ * @author yanghao
+ */
+public class MainApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("pdf-transcode-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 320, 240);
-        stage.setTitle("PDF转换器");
+        stage.setTitle("Office Tool");
         stage.setScene(scene);
         stage.show();
     }
