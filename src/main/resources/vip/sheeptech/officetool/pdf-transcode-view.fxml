@@ -11,7 +11,7 @@
     </padding>
     <Button text="点击选择文件" onAction="#openFileChoice"/>
     <TextField fx:id="inputFilePath" />
-    <Label text="DPI"/>
+    <Label text="DPI(值越大,图片越清晰,输出文件体积越大)"/>
     <ChoiceBox fx:id="outputDpi">
         <Integer fx:value="96"/>
         <Integer fx:value="100"/>
@@ -19,7 +19,7 @@
         <Integer fx:value="150"/>
         <Integer fx:value="200"/>
     </ChoiceBox>
-    <Label text="输出格式"/>
+    <Label text="输出图片格式"/>
     <ChoiceBox fx:id="outputClass">
         <String fx:value="jpg"/>
         <String fx:value="png"/>

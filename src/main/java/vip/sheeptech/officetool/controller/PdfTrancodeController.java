@@ -1,5 +1,6 @@
 package vip.sheeptech.officetool.controller;
 
+import cn.hutool.core.io.file.FileNameUtil;
 import cn.hutool.core.lang.Assert;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -17,6 +18,9 @@ import vip.sheeptech.officetool.server.Pdf2Images;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -64,7 +68,16 @@ public class PdfTrancodeController implements Initializable {
         File pdfFile = new File(pdfPath);
         Assert.isTrue(pdfFile.exists(), "非法路径");
         String parentPath = pdfFile.getParent() + "/";
-        List<String> stringList = Pdf2Images.pdfToManyImage(pdfPath, parentPath, outputDpiValue, outputClassValue);
+        String fileName = FileNameUtil.mainName(pdfFile);
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-HH:mm:ss");
+        Date nowTime = new Date();
+        String nowTimeString = dateFormat.format(nowTime);
+        String outputPath = parentPath + fileName + "-" + nowTimeString + "/";
+        File outputFile = new File(outputPath);
+        if (!outputFile.exists()) {
+            outputFile.mkdir();
+        }
+        List<String> stringList = Pdf2Images.pdfToManyImage(pdfPath, outputPath, outputDpiValue, outputClassValue);
     }
 
     @FXML
@@ -85,8 +98,6 @@ public class PdfTrancodeController implements Initializable {
                 new FileChooser.ExtensionFilter("PDF files (*.pdf)", "*.pdf");
         fileChooser.getExtensionFilters().add(extFilter);
         File file = fileChooser.showOpenDialog(stage);
-        System.out.println(file.getAbsolutePath());
-        System.out.println(file.getPath());
         PdfTrancodeController pdfTrancodeController = loader.getController();
         pdfTrancodeController.inputFilePath.setText(file.getAbsolutePath());
     }
