@@ -15,6 +15,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import vip.sheeptech.officetool.MainApplication;
 import vip.sheeptech.officetool.server.Pdf2Images;
+import vip.sheeptech.officetool.util.SystemUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -40,6 +41,7 @@ public class PdfTrancodeController implements Initializable {
     private ChoiceBox<String> outputClass;
     @FXML
     private TextArea runLog;
+    private String outputPath;
 
     @FXML
     protected void onChangeButtonClick(){
@@ -56,6 +58,7 @@ public class PdfTrancodeController implements Initializable {
             for (String outputFilePath : outputFilePathList) {
                 runLog.appendText(outputFilePath + "\n");
             }
+            openFileLocation(outputPath);
         } catch (Exception e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("错误");
@@ -86,12 +89,39 @@ public class PdfTrancodeController implements Initializable {
         DateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
         Date nowTime = new Date();
         String nowTimeString = dateFormat.format(nowTime);
-        String outputPath = parentPath + fileName + "-" + nowTimeString + "/";
+        outputPath = parentPath + fileName + "-" + nowTimeString + "/";
         File outputFile = new File(outputPath);
         if (!outputFile.exists()) {
             outputFile.mkdir();
         }
         return Pdf2Images.pdfToManyImage(pdfPath, outputPath, outputDpiValue, outputClassValue);
+    }
+
+    /**
+     * 使用系统默认资源管理器打开指定路径
+     * @param path 资源路径
+     */
+    public static void openFileLocation(String path) {
+        if (SystemUtil.isWindows()) {
+            try {
+                path = path.replaceAll("/", "\\\\");
+                Runtime.getRuntime().exec("explorer.exe " + path);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        } else if (SystemUtil.isMac()) {
+            try {
+                Runtime.getRuntime().exec("open -R " + path);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        } else if (SystemUtil.isLinux()) {
+            try {
+                Runtime.getRuntime().exec("xdg-open " + path);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
     }
 
     @FXML
