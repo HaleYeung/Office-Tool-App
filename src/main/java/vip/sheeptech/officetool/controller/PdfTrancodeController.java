@@ -8,6 +8,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
@@ -37,27 +38,39 @@ public class PdfTrancodeController implements Initializable {
     private ChoiceBox<Integer> outputDpi;
     @FXML
     private ChoiceBox<String> outputClass;
+    @FXML
+    private TextArea runLog;
 
     @FXML
     protected void onChangeButtonClick(){
+        runLog.clear();
         String pdfPath = inputFilePath.getText();
         try {
-            doFileChange(pdfPath);
+            List<String> outputFilePathList = doFileChange(pdfPath);
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("结果");
             alert.setHeaderText(null);
             alert.setContentText("执行成功!");
             alert.showAndWait();
+            runLog.setText("输出文件:\n");
+            for (String outputFilePath : outputFilePathList) {
+                runLog.appendText(outputFilePath + "\n");
+            }
         } catch (Exception e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("错误");
             alert.setHeaderText(null);
             alert.setContentText(e.getMessage());
             alert.showAndWait();
+            runLog.setText("错误:" + e.getMessage());
         }
     }
 
-    private void doFileChange(String pdfPath) {
+    /**
+     * @param pdfPath PDF文件路径
+     * @return 输出文件地址集合
+     */
+    private List<String> doFileChange(String pdfPath) {
         Assert.notNull(pdfPath, "路径为空");
         Assert.notEmpty(pdfPath, "路径为空");
         Integer outputDpiValue = outputDpi.getValue();
@@ -68,8 +81,9 @@ public class PdfTrancodeController implements Initializable {
         File pdfFile = new File(pdfPath);
         Assert.isTrue(pdfFile.exists(), "非法路径");
         String parentPath = pdfFile.getParent() + "/";
+        parentPath = parentPath.replaceAll("\\\\", "/");
         String fileName = FileNameUtil.mainName(pdfFile);
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-HH:mm:ss");
+        DateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
         Date nowTime = new Date();
         String nowTimeString = dateFormat.format(nowTime);
         String outputPath = parentPath + fileName + "-" + nowTimeString + "/";
@@ -77,7 +91,7 @@ public class PdfTrancodeController implements Initializable {
         if (!outputFile.exists()) {
             outputFile.mkdir();
         }
-        List<String> stringList = Pdf2Images.pdfToManyImage(pdfPath, outputPath, outputDpiValue, outputClassValue);
+        return Pdf2Images.pdfToManyImage(pdfPath, outputPath, outputDpiValue, outputClassValue);
     }
 
     @FXML
@@ -106,5 +120,7 @@ public class PdfTrancodeController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         outputDpi.setValue(105);
         outputClass.setValue("jpg");
+        // 自动换行
+        runLog.setWrapText(false);
     }
 }

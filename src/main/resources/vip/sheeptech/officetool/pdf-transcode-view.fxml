@@ -25,4 +25,5 @@
         <String fx:value="png"/>
     </ChoiceBox>
     <Button text="转换" onAction="#onChangeButtonClick"/>
+    <TextArea fx:id="runLog" editable="false"/>
 </VBox>

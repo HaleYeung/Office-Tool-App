@@ -14,7 +14,7 @@ public class MainApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("pdf-transcode-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 520, 340);
+        Scene scene = new Scene(fxmlLoader.load(), 560, 540);
         stage.setTitle("Office Tool");
         stage.setScene(scene);
         stage.show();
