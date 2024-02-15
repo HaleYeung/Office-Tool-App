@@ -29,9 +29,10 @@ public class Pdf2Images {
         if (!file.exists()) {
             return null;
         }
+        PDDocument doc = null;
         try {
             // 加载pdf文件
-            PDDocument doc = PDDocument.load(file);
+            doc = PDDocument.load(file);
             // 读取pdf文件
             PDFRenderer renderer = new PDFRenderer(doc);
             int pageCount = doc.getNumberOfPages();
@@ -52,6 +53,14 @@ public class Pdf2Images {
         } catch (IOException e) {
             e.printStackTrace();
             return null;
+        } finally {
+            if (doc != null) {
+                try {
+                    doc.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 }
