@@ -5,6 +5,7 @@ import cn.hutool.core.lang.Assert;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ChoiceBox;
@@ -58,7 +59,7 @@ public class PdfTrancodeController implements Initializable {
             for (String outputFilePath : outputFilePathList) {
                 runLog.appendText(outputFilePath + "\n");
             }
-            openFileLocation(outputPath);
+            SystemUtil.openFileLocation(outputPath);
         } catch (Exception e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("错误");
@@ -97,41 +98,29 @@ public class PdfTrancodeController implements Initializable {
         return Pdf2Images.pdfToManyImage(pdfPath, outputPath, outputDpiValue, outputClassValue);
     }
 
-    /**
-     * 使用系统默认资源管理器打开指定路径
-     * @param path 资源路径
-     */
-    public static void openFileLocation(String path) {
-        if (SystemUtil.isWindows()) {
-            try {
-                path = path.replaceAll("/", "\\\\");
-                Runtime.getRuntime().exec("explorer.exe " + path);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-        } else if (SystemUtil.isMac()) {
-            try {
-                Runtime.getRuntime().exec("open -R " + path);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-        } else if (SystemUtil.isLinux()) {
-            try {
-                Runtime.getRuntime().exec("xdg-open " + path);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-        }
-    }
+
 
     @FXML
     protected void openFileChoice() {
+        String inputFilePath = this.inputFilePath.getText();
+        Integer outputDpi = this.outputDpi.getValue();
+        String outputClass = this.outputClass.getValue();
+        String runLog = this.runLog.getText();
         Parent root;
         FXMLLoader loader = new FXMLLoader();
+        PdfTrancodeController pdfTrancodeController;
         try {
             loader.setLocation(MainApplication.class.getResource("pdf-transcode-view.fxml"));
             root = loader.load();
             rootVbox.getChildren().setAll(root);
+            Insets padding = new Insets(0, 0, 0, 0);
+            rootVbox.setPadding(padding);
+            pdfTrancodeController = loader.getController();
+            pdfTrancodeController.outputDpi.setValue(outputDpi);
+            pdfTrancodeController.outputClass.setValue(outputClass);
+            pdfTrancodeController.runLog.clear();
+            pdfTrancodeController.runLog.setText(runLog);
+            pdfTrancodeController.inputFilePath.setText(inputFilePath);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -142,8 +131,9 @@ public class PdfTrancodeController implements Initializable {
                 new FileChooser.ExtensionFilter("PDF files (*.pdf)", "*.pdf");
         fileChooser.getExtensionFilters().add(extFilter);
         File file = fileChooser.showOpenDialog(stage);
-        PdfTrancodeController pdfTrancodeController = loader.getController();
-        pdfTrancodeController.inputFilePath.setText(file.getAbsolutePath());
+        if (null != file) {
+            pdfTrancodeController.inputFilePath.setText(file.getAbsolutePath());
+        }
     }
 
     @Override
