@@ -6,7 +6,7 @@
 
     <groupId>vip.sheeptech</groupId>
     <artifactId>officetool</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.3-SNAPSHOT</version>
     <name>officetool</name>
 
     <properties>
