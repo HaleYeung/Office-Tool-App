@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.VBox?>
+<?import java.lang.*?>
+<VBox alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml" fx:id="rootVbox"
+      fx:controller="vip.sheeptech.officetool.controller.PdfTrancodeController">
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+    </padding>
+    <Button text="点击选择文件" onAction="#openFileChoice"/>
+    <TextField fx:id="inputFilePath" />
+    <Label text="DPI(值越大,图片越清晰,输出文件体积越大)"/>
+    <ChoiceBox fx:id="outputDpi">
+        <Integer fx:value="96"/>
+        <Integer fx:value="100"/>
+        <Integer fx:value="105"/>
+        <Integer fx:value="150"/>
+        <Integer fx:value="200"/>
+    </ChoiceBox>
+    <Label text="输出图片格式"/>
+    <ChoiceBox fx:id="outputClass">
+        <String fx:value="jpg"/>
+        <String fx:value="png"/>
+    </ChoiceBox>
+    <Button text="转换" onAction="#onChangeButtonClick"/>
+    <TextArea fx:id="runLog" editable="false"/>
+</VBox>
