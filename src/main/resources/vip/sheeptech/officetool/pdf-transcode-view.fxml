@@ -24,6 +24,8 @@
         <String fx:value="jpg"/>
         <String fx:value="png"/>
     </ChoiceBox>
+    <Button text="点击选择输出目录" onAction="#openOutputDirChoice"/>
+    <TextField fx:id="outputDirPath" />
     <Button text="转换" onAction="#onChangeButtonClick"/>
     <TextArea fx:id="runLog" editable="false"/>
 </VBox>

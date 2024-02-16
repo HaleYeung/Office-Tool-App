@@ -13,7 +13,7 @@ public class SystemUtil {
                 path = path.replaceAll("/", "\\\\");
                 Runtime.getRuntime().exec(new String[]{"explorer.exe", path});
             } else if (SystemUtil.isMac()) {
-                Runtime.getRuntime().exec(new String[]{"open -R", path});
+                Runtime.getRuntime().exec(new String[]{"open", path});
             } else if (SystemUtil.isLinux()) {
                 Runtime.getRuntime().exec(new String[]{"xdg-open", path});
             }
